@@ -1,0 +1,35 @@
+# STAGE RUNNER:
+FROM php:8.1-fpm-alpine as builder
+# Locate the application
+WORKDIR /var/www
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Instal php depedencies
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions gd zip pdo pdo_mysql
+# Copy only the composer files needed for install (composer.json and composer.lock)
+COPY composer.json /var/www/
+# Copy the rest of the application
+COPY . .
+# Copy the env file
+COPY .env.example .env
+# Install dependencies production mode
+RUN composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist
+
+
+# STAGE RUNNER:
+FROM php:8.1-fpm-alpine as runner
+# Locate the application
+WORKDIR /var/www
+# Copy the rest of the application
+COPY --from=builder /var/www .
+# Change permission to www-data
+RUN chown www-data:www-data /var/www/storage/ -R
+# Production optimize things
+#RUN php artisan config:cache
+RUN php artisan event:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+# Run php-fpm service
+CMD ["php-fpm"]
