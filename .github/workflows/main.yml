@@ -18,7 +18,7 @@ jobs:
 
     - name: Deploy to VPS
       run: |
-        sshpass -p ${{ secrets.VPS_PASSWORD }} ssh -o StrictHostKeyChecking=no -p 2222 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+        sshpass -p ${{ secrets.VPS_PASSWORD }} ssh -o StrictHostKeyChecking=no -p 2222 -T ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /var/www/html/motion-backend
           git pull origin main
           docker-compose down
