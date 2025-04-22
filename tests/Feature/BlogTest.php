@@ -65,7 +65,8 @@ class BlogTest extends TestCase
         $response = $this->postJson("/api/blog/1", [
             'title' => 'Updated Title',
             'content' => 'Updated content',
-            'thumbnail' => $file
+            'thumbnail' => $file,
+            'author' => 'Charlie'
         ]);
 
         $response->assertStatus(200)
@@ -82,7 +83,8 @@ class BlogTest extends TestCase
         $response = $this->postJson("/api/blog/1", [
             'title' => 'Updated Title',
             'content' => 'Updated content',
-            'thumbnail' => $file
+            'thumbnail' => $file,
+            'author' => 'Charlie'
         ]);
 
         $response->assertStatus(422)

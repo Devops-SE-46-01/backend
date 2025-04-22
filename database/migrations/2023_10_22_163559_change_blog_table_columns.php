@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('blogs', function (Blueprint $table) {
-            $table->dropColumn('description');
-            $table->longText('body')->nullable()->after('title');
-        });
+        // Schema::table('blogs', function (Blueprint $table) {
+        //     $table->dropColumn('description');
+        //     $table->longText('body')->nullable()->after('title');
+        // });
     }
 
     /**
@@ -26,9 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('blogs', function (Blueprint $table) {
-            $table->dropColumn('body');
-            $table->text('description')->after('title');
-        });
+        // Schema::table('blogs', function (Blueprint $table) {
+        //     $table->dropColumn('body');
+        //     $table->text('description')->after('title');
+        // });
     }
 };
