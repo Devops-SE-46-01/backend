@@ -15,7 +15,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testing
+          MYSQL_DATABASE: motion
         ports:
           - 3306:3306
         options: >-
@@ -39,6 +39,14 @@ jobs:
 
       - name: Copy .env
         run: cp .env.example .env
+
+      - name: Update .env database settings
+        run: |
+          sed -i 's/DB_HOST=.*/DB_HOST=mysql/' .env
+          sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=motion/' .env
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
 
       - name: Generate App Key
         run: php artisan key:generate
