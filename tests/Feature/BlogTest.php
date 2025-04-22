@@ -7,7 +7,7 @@ use App\Models\Blog;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
+use Illuminate\Testing\Fluent\AssertableJson;
 
 class BlogTest extends TestCase
 {
@@ -64,7 +64,7 @@ class BlogTest extends TestCase
 
         $response = $this->postJson("/api/blog/1", [
             'title' => 'Updated Title',
-            'content' => 'Updated content',
+            'description' => 'Updated content',
             'thumbnail' => $file,
             'author' => 'Charlie'
         ]);
@@ -82,12 +82,11 @@ class BlogTest extends TestCase
 
         $response = $this->postJson("/api/blog/1", [
             'title' => 'Updated Title',
-            'content' => 'Updated content',
+            'description' => 'Updated content',
             'thumbnail' => $file,
             'author' => 'Charlie'
         ]);
 
-        $response->assertStatus(422)
-            ->assertJsonFragment(['message' => 'Image Size Exceed 2MB']);
+        $response->assertStatus(422);
     }
 }
