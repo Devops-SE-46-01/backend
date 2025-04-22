@@ -19,16 +19,17 @@ class Blog extends Model
 
     // protected $appends = ['thumbnail_content'];
 
-    // protected static function booted()
-    // {
-    //     static::deleted(function ($product) {
-    //         if ($product->image != null)
-    //             Storage::disk('public')->delete('blogs/' . $product->rawImage);
-    //     });
-    // }
+    protected static function booted()
+    {
+        static::deleted(function ($blog) {
+            if ($blog->thumbnail != null) {
+                Storage::disk('public')->delete('blogs/' . $blog->thumbnail);
+            }
+        });
+    }
 
-    // public function getThumbnailContentAttribute()
-    // {
-    //     return $this->attributes['thumbnail'] ? asset('storage/blogs/' . $this->attributes['thumbnail']) : asset('img/default/products.png');
-    // }
+    public function getThumbnailContentAttribute()
+    {
+        return $this->thumbnail ? asset('storage/blogs/' . $this->thumbnail) : asset('img/default/products.png');
+    }
 }

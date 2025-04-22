@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Blog;
 use App\Models\Role;
@@ -32,6 +33,28 @@ class BlogController extends Controller
         } catch (Throwable $err) {
             return $this->sendResponse(['message' => $err->getMessage(), 'status' => 422], 422);
         }
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'body' => 'required|string',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'author' => 'required|string|max:255',
+        ]);
+
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('blogs', 'public');
+            $validatedData['thumbnail'] = $thumbnailPath;
+        }
+
+        $blog = Blog::create($validatedData);
+
+        return response()->json([
+            'message' => 'Blog created successfully',
+            'data' => $blog,
+        ], 201);
     }
 
 

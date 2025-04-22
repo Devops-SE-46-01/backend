@@ -4,8 +4,6 @@ use App\Http\Controllers\Api\AslabController;
 use App\Http\Controllers\Api\BlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\RecruitationController;
 use App\Http\Controllers\Api\ProjectShowcaseController;
 /*
@@ -35,8 +33,9 @@ Route::get('/yazidal/aslab', [AslabController::class, 'index'])->name('aslab.ind
 //     Route::get('/blogs', [BlogController::class, 'index']);
 // });
 
-
-
+Route::post('/blog', [BlogController::class, 'store']);
 Route::get('/blog', [BlogController::class, 'index']);
-Route::post('/blog', [BlogController::class, 'create']);
+Route::get('/Aslab/{id}', [AslabController::class, 'show']);
+Route::get('/Aslab', [AslabController::class, 'index']);
+Route::post('/Aslab', [AslabController::class, 'store']);
 Route::post('/blog/{id}', [BlogController::class, 'update']);
