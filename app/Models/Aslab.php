@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Aslab extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
