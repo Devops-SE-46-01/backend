@@ -31,14 +31,14 @@ class ProjectShowcaseFactory extends Factory
             'project_name'  => $this->faker->sentence(3),
             'team_name'     => $this->faker->company(),
             'team_members'  => implode(', ', $members),
-            'proposal'      => $this->faker->boolean(70) ? $this->faker->url() : null,
-            'prd'           => $this->faker->boolean(70) ? $this->faker->url() : null,
-            'figma'         => $this->faker->boolean(50) ? $this->faker->url() : null,
-            'github'        => $this->faker->boolean(80) ? 'https://github.com/'.$this->faker->userName().'/'.$this->faker->word() : null,
+            'proposal'      => $this->faker->url() ,
+            'prd'            => $this->faker->url,
+            'figma'          => $this->faker->url,
+            'github'         => $this->faker->url,
             'about'         => $this->faker->paragraph(),
-            'thumbnail'     => null,
-            'qr'            => null,
-            'design_system' => $this->faker->boolean(60) ? $this->faker->url() : null,
+            'thumbnail'     => $this->faker->url,
+            'qr'            => $this->faker->url,
+            'design_system' => $this->faker->url(),
         ];
     }
 }

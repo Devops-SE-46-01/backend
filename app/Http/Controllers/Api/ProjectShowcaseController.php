@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Support\Facades\Validator;
-use App\Models\Recruitation;
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateProjectShowcaseRequest;
 use App\Http\Resources\ProjectShowcaseResource;
 use App\Models\ProjectShowcase;
