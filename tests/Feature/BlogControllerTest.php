@@ -32,7 +32,7 @@ class BlogControllerTest extends TestCase
 
         $this->assertDatabaseHas('blogs', [
             'title' => $blogData['title'],
-            'body' => $blogData['body'],
+            'description' => $blogData['description'],
             'author' => $blogData['author'],
         ]);
 

@@ -10,7 +10,7 @@ class BlogFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,
-            'body' => $this->faker->paragraph,
+            'description' => $this->faker->paragraph,
             'author' => $this->faker->name,
             'thumbnail' => null, // opsional karena akan dihandle manual saat testing
         ];

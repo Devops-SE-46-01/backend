@@ -39,7 +39,7 @@ class BlogController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'body' => 'required|string',
+            'description' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'author' => 'required|string|max:255',
         ]);
