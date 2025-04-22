@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\RecruitationController;
+use App\Http\Controllers\Api\ProjectShowcaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/recruitation/check/{nim}', [RecruitationController::class, 'check']);
 Route::post('/recruitation', [RecruitationController::class, 'store']);
+
+Route::get('/project-showcases', [ProjectShowcaseController::class, 'index']);
+Route::post('/project-showcases', [ProjectShowcaseController::class, 'store']);
+Route::get('/project-showcases/{id}', [ProjectShowcaseController::class, 'show']);
+Route::put('/project-showcases/{id}', [ProjectShowcaseController::class, 'update']);
+Route::delete('/project-showcases/{id}', [ProjectShowcaseController::class, 'destroy']);
 

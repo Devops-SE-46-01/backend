@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('github');
             $table->text('about');
             //images
-            $table->string('thumbnail');
-            $table->string('qr');
+            $table->string('thumbnail')->nullable();;
+            $table->string('qr')->nullable();;
             $table->string('design_system');
 
             $table->timestamps();
