@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Support\Facades\Validator;
-use App\Models\Recruitation;
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateProjectShowcaseRequest;
+use App\Http\Resources\ProjectShowcaseResource;
 use App\Models\ProjectShowcase;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiTrait;
@@ -27,7 +25,12 @@ class ProjectShowcaseController extends Controller
 
         $project_showcase->update($data);
 
-        return new ProjectShowcaseResource($project_showcase);
+        return $this->sendResponse(['message' => new ProjectShowcaseResource($project_showcase), 'status' => 201]);
     }
 
+    public function destroy(ProjectShowcase $project_showcase)
+    {
+        $project_showcase->delete();
+        return response()->json(null, 204);
+    }
 }
