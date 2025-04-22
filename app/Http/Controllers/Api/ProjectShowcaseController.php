@@ -28,4 +28,9 @@ class ProjectShowcaseController extends Controller
         return $this->sendResponse(['message' => new ProjectShowcaseResource($project_showcase), 'status' => 201]);
     }
 
+    public function destroy(ProjectShowcase $project_showcase)
+    {
+        $project_showcase->delete();
+        return response()->json(null, 204);
+    }
 }

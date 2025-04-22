@@ -3,11 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\ProjectShowcase;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ProjectShowcaseTest extends TestCase
@@ -73,12 +71,34 @@ class ProjectShowcaseTest extends TestCase
         $this->assertArrayHasKey('thumbnail', $response->json('errors'));
     }
     
-
-
     // Test update project showcase with missing id
-    public function testUpdateReturns404()
+    public function testUpdateReturnsNotFound()
     {
         $response = $this->postJson('/api/project-showcases/99999', [
+            'project_name' => 'Non Existent'
+        ]);
+
+        $response->assertNotFound();
+    }
+
+    // Test delete project showcase with valid data
+    public function testDestroyDeletesProjectShowcase()
+    {
+        $project = ProjectShowcase::factory()->create();
+
+        $response = $this->deleteJson("/api/project-showcases/{$project->id}");
+
+        $response->assertNoContent();
+
+        $this->assertDatabaseMissing('project_showcase', [
+            'id' => $project->id,
+        ]);
+    }
+
+    // Test delete project showcase with missing id
+    public function testDeleteReturns()
+    {
+        $response = $this->deleteJson('/api/project-showcases/99999', [
             'project_name' => 'Non Existent'
         ]);
 

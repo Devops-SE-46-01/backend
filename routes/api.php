@@ -25,3 +25,4 @@ Route::get('/recruitation/check/{nim}', [RecruitationController::class, 'check']
 Route::post('/recruitation', [RecruitationController::class, 'store']);
 
 Route::post('project-showcases/{project_showcase}', [ProjectShowcaseController::class, 'update']);
+Route::delete('project-showcases/{project_showcase}', [ProjectShowcaseController::class, 'destroy']);
