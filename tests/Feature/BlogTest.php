@@ -18,7 +18,7 @@ class BlogTest extends TestCase
      * @return void
      */
 
-
+    use DatabaseTransactions;
 
     protected function setUpUser()
     {
@@ -37,7 +37,7 @@ class BlogTest extends TestCase
         ]);
     }
 
-    public function test_get_all_blog()
+    public function testGetAllBlog()
     {
 
         $this->setUpUser();
@@ -46,7 +46,7 @@ class BlogTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_get_blog_by_author()
+    public function testGetBlogByAuthor()
     {
 
         $this->setUpUser();
@@ -55,7 +55,7 @@ class BlogTest extends TestCase
             ->assertJsonFragment(['author' => 'Boedi']);
     }
 
-    public function test_update_blog_with_thumbnail()
+    public function testUpdateBlogWithThumbnail()
     {
         Storage::fake('public');
         $this->setUpUser();
@@ -73,7 +73,7 @@ class BlogTest extends TestCase
             ->assertJsonFragment(['message' => 'Edit Success']);
     }
 
-    public function test_update_blog_with_large_size_thumbnail()
+    public function testUpdateBlogWithLargeSizeThumbnail()
     {
         Storage::fake('public');
         $this->setUpUser();
