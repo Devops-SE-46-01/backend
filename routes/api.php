@@ -29,3 +29,4 @@ Route::post('/recruitation', [RecruitationController::class, 'store']);
 
 Route::get('/blog', [BlogController::class, 'index']);
 Route::post('/blog', [BlogController::class, 'create']);
+Route::post('/blog/{id}', [BlogController::class, 'update']);

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogRequest;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Thumbnails;
+use Throwable;
 
 class BlogController extends Controller
 {
@@ -18,51 +19,47 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        $query = Blog::query();
+        try {
+            $query = Blog::query();
 
-        if ($request->has('author')) {
-            $query->where('author', 'like', '%' . $request->author . '%');
+            if ($request->has('author')) {
+                $query->where('author', 'like', '%' . $request->author . '%');
+            }
+
+            $perPage = $request->get('per_page', 10);
+            $blogs = $query->paginate($perPage);
+            return $this->sendResponse(['message' => 'Success', 'status' => 200, 'data' => $blogs], 200);
+        } catch (Throwable $err) {
+            return $this->sendResponse(['message' => $err->getMessage(), 'status' => 422], 422);
         }
-
-        $perPage = $request->get('per_page', 10);
-        $blogs = $query->paginate($perPage);
-        return $this->sendResponse(['message' => 'Success', 'status' => 200, 'data' => $blogs], 200);
     }
 
-    public function create(Request $request)
-    {
-        $path = $request->file('thumbnail')->store('public/thumbnails');
-        $thumbnailUrl = Storage::url($path);
 
-        Blog::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'author' => $request->author,
-            'thumbnail' => $thumbnailUrl,
-        ]);
-
-        return $this->sendResponse($path);
-    }
-    public function edit() {}
-    public function store() {}
     public function update(BlogRequest $request, $id)
     {
-        $requestedData = $request->validated();
-        $blog = Blog::findOrFail($id);
+        try {
+            $blog = Blog::findOrFail($id);
 
-        if ($request->hasFile('thumbnail')) {
-            if (Storage::exists($blog->thumbnail)) {
-                Storage::delete($blog->thumbnail);
+            if ($request->hasFile('thumbnail')) {
+
+                if ($request->file('thumbnail')->getSize() > 2 * 1024 * 1024) {
+                    return $this->sendResponse('Image Size Exceed 2MB', 422);
+                }
+
+                if (Storage::exists($blog->thumbnail)) {
+                    Storage::delete($blog->thumbnail);
+                }
             }
+
+            $path = $request->file('thumbnail')->store('public/thumbnails');
+            $thumbnailUrl = Storage::url($path);
+            $requestedData['thumbnail'] = $thumbnailUrl;
+
+            $blog->update($requestedData);
+
+            return $this->sendResponse(['message' => 'Edit Success', 'status' => 200], 200);
+        } catch (Throwable $err) {
+            return $this->sendResponse(['message' => $err->getMessage(), 'status' => 422], 422);
         }
-
-        $path = $request->file('thumbnail')->store('public/thumbnails');
-        $thumbnailUrl = Storage::url($path);
-        $requestedData['thumbnail'] = $thumbnailUrl;
-
-        Blog::update($requestedData);
-
-        return $this->sendResponse(['message' => 'Success', 'status' => 200], 200);
     }
-    public function destroy() {}
 }
