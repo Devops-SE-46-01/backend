@@ -61,5 +61,16 @@ class BlogController extends Controller
         } catch (Throwable $err) {
             return $this->sendResponse(['message' => $err->getMessage(), 'status' => 422], 422);
         }
+      
+    }
+  
+      public function destroy($id)
+    {
+        $blog = Blog::find($id);
+        $blog->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Post deleted successfully'
+        ]);
     }
 }

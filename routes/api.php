@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\AslabController;
+use App\Http\Controllers\Api\BlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\RecruitationController;
-use App\Http\Controllers\BlogController as ControllersBlogController;
-
+use App\Http\Controllers\Api\ProjectShowcaseController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,6 +25,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/recruitation/check/{nim}', [RecruitationController::class, 'check']);
 Route::post('/recruitation', [RecruitationController::class, 'store']);
+Route::post('project-showcases/{project_showcase}', [ProjectShowcaseController::class, 'update']);
+Route::delete('project-showcases/{project_showcase}', [ProjectShowcaseController::class, 'destroy']);
+Route::get('/yazidal/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::delete('/yazidal/blogs/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+Route::post('/yazidal/aslab', [AslabController::class, 'store'])->name('blogs.store');
+Route::get('/yazidal/aslab', [AslabController::class, 'index'])->name('aslab.index');
+// Route::prefix('api')->group(function () {
+//     Route::get('/blogs', [BlogController::class, 'index']);
+// });
 
 
 
