@@ -8,7 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class AslabControllerTest extends TestCase
+class AslabTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,7 +18,6 @@ class AslabControllerTest extends TestCase
         Storage::fake('public');
     }
 
-    // Test get all aslabs
     public function testCanGetAllAslabs()
     {
         Aslab::factory()->count(3)->create();
@@ -33,7 +32,6 @@ class AslabControllerTest extends TestCase
             ]);
     }
 
-    // Test store new aslab
     public function testCanCreateAslab()
     {
         $data = [
@@ -55,7 +53,6 @@ class AslabControllerTest extends TestCase
         $this->assertDatabaseHas('aslabs', $data);
     }
 
-    // Test get specific aslab
     public function testCanShowAslab()
     {
         $aslab = Aslab::factory()->create();
@@ -69,7 +66,6 @@ class AslabControllerTest extends TestCase
             ]);
     }
 
-    // Test get aslab with invalid id
     public function testShowReturnsNotFound()
     {
         $response = $this->getJson('/api/Aslab/99999');
@@ -77,4 +73,58 @@ class AslabControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-}
+    public function testCanUpdateAslab()
+    {
+        $aslab = Aslab::factory()->create();
+        $updateData = [
+            'name' => 'Updated Name',
+            'position' => 'Updated Position',
+            'social_media' => '@updatedsocial',
+        ];
+
+        $response = $this->putJson('/api/Aslab/' . $aslab->id, $updateData);
+
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => 'Updated Name',
+                'position' => 'Updated Position',
+                'social_media' => '@updatedsocial',
+            ]);
+
+        $this->assertDatabaseHas('aslabs', $updateData);
+    }
+
+    public function testUpdateReturnsNotFound()
+    {
+        $updateData = [
+            'name' => 'Updated Name',
+            'position' => 'Updated Position',
+        ];
+
+        $response = $this->putJson('/api/Aslab/99999', $updateData);
+
+        $response->assertStatus(404);
+    }
+
+    public function testCanDeleteAslab()
+    {
+        $aslab = Aslab::factory()->create();
+
+        $response = $this->deleteJson('/api/Aslab/' . $aslab->id);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 200,
+                'message' => 'Success delete Asistant Laboratory',
+            ]);
+
+        $this->assertDatabaseMissing('aslabs', ['id' => $aslab->id]);
+    }
+
+    public function testDeleteReturnsNotFound()
+    {
+        $response = $this->deleteJson('/api/Aslab/99999');
+
+        $response->assertStatus(404);
+    }
+} 
