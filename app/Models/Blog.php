@@ -10,19 +10,25 @@ class Blog extends Model
 {
     use HasFactory;
 
-    public $guarded = [];
-    protected $appends = ['thumbnail_content'];
+    protected $fillable = [
+        'title',
+        'description',
+        'thumbnail',
+        'author',
+    ];
 
-    protected static function booted()
-    {
-        static::deleted(function ($product) {
-            if ($product->image != null)
-                Storage::disk('public')->delete('blogs/' . $product->rawImage);
-        });
-    }
+    // protected $appends = ['thumbnail_content'];
 
-    public function getThumbnailContentAttribute()
-    {
-        return $this->attributes['thumbnail'] ? asset('storage/blogs/' . $this->attributes['thumbnail']) : asset('img/default/products.png');
-    }
+    // protected static function booted()
+    // {
+    //     static::deleted(function ($product) {
+    //         if ($product->image != null)
+    //             Storage::disk('public')->delete('blogs/' . $product->rawImage);
+    //     });
+    // }
+
+    // public function getThumbnailContentAttribute()
+    // {
+    //     return $this->attributes['thumbnail'] ? asset('storage/blogs/' . $this->attributes['thumbnail']) : asset('img/default/products.png');
+    // }
 }
