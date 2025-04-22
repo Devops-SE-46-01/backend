@@ -262,7 +262,6 @@
                         <span class="">Recruitation</span>
                       </a>
                     </li>
-                  {{-- @canany(['admin', 'role', 'permission'])
                   <li class="sidebar-list">
                     <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                       <i class="fa-light fa-chalkboard-user fa-fw fa-lg me-2"></i>
@@ -270,11 +269,10 @@
                     >
                     <ul class="sidebar-submenu">
                       @can('admin')
-                      <li><a href="{{ route('admins.index') }}">Member</a></li>
+                      <li><a href="{{ route('aslabs.index') }}">Member</a></li>
                       @endcan
                     </ul>
                   </li>
-                @endcanany --}}
                     <li class="sidebar-list">
                       <a class="sidebar-link sidebar-title link-nav" href="{{ route('blogs.index') }}">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

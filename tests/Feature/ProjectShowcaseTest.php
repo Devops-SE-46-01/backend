@@ -18,6 +18,116 @@ class ProjectShowcaseTest extends TestCase
         Storage::fake('local');
     }
 
+    // Test listing all project showcases
+    public function testIndexReturnsListOfProjectShowcases()
+    {
+        // Create multiple project showcases
+        $projects = ProjectShowcase::factory()->count(3)->create();
+        
+        $response = $this->getJson('/api/project-showcases');
+        
+        $response->assertOk()
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'Projects retrieved successfully'
+            ]);
+        
+        // Verify the response contains the projects
+        $this->assertCount(3, $response->json('data'));
+    }
+    
+    // Test storing a new project showcase with valid data
+    public function testStoreCreatesNewProjectShowcase()
+    {
+        Storage::fake('public');
+        
+        $thumbnail = UploadedFile::fake()->image('project.jpg');
+        $qrCode = UploadedFile::fake()->image('qr.jpg');
+        
+        $payload = [
+            'project_name' => 'Test Project',
+            'team_name' => 'Test Team',
+            'team_members' => 'John Doe, Jane Doe',
+            'about' => 'This is a test project description',
+            'proposal' => 'https://example.com/proposal',
+            'prd' => 'https://example.com/prd',
+            'figma' => 'https://example.com/figma',
+            'github' => 'https://github.com/test/project',
+            'design_system' => 'https://example.com/design',
+            'thumbnail' => $thumbnail,
+            'qr' => $qrCode
+        ];
+        
+        $response = $this->postJson('/api/project-showcases', $payload);
+        
+        $response->assertStatus(201)
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'Project created successfully'
+            ]);
+        
+        // Verify it was stored in the database
+        $this->assertDatabaseHas('project_showcase', [
+            'project_name' => 'Test Project',
+            'team_name' => 'Test Team',
+            'team_members' => 'John Doe, Jane Doe',
+            'about' => 'This is a test project description',
+            'proposal' => 'https://example.com/proposal',
+        ]);
+        
+        // Verify files were stored
+        Storage::disk('public')->assertExists('thumbnails/' . $thumbnail->hashName());
+        Storage::disk('public')->assertExists('qr_codes/' . $qrCode->hashName());
+    }
+    
+    // Test storing a project showcase with invalid data
+    public function testStoreReturnsValidationErrors()
+    {
+        $payload = [
+            // Missing required fields
+            'project_name' => 'Test Project',
+            'proposal' => 'not-a-url', // Invalid URL
+        ];
+        
+        $response = $this->postJson('/api/project-showcases', $payload);
+        
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['team_name', 'team_members', 'about', 'proposal']);
+    }
+    
+    // Test retrieving a specific project showcase
+    public function testShowReturnsProjectShowcase()
+    {
+        $project = ProjectShowcase::factory()->create([
+            'project_name' => 'Specific Project',
+            'team_name' => 'Specific Team',
+        ]);
+        
+        $response = $this->getJson("/api/project-showcases/{$project->id}");
+        
+        $response->assertOk()
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'Project retrieved successfully',
+                'data' => [
+                    'project_name' => 'Specific Project',
+                    'team_name' => 'Specific Team',
+                ]
+            ]);
+    }
+    
+    // Test retrieving a non-existent project showcase
+    public function testShowReturnsNotFoundForInvalidId()
+    {
+        $response = $this->getJson('/api/project-showcases/99999');
+        
+        $response->assertNotFound()
+            ->assertJson([
+                'status' => 'error',
+                'message' => 'Project not found'
+            ]);
+    }
+
     // Test update project showcase with valid data
     public function testModifiesExistingProjectShowcase()
     {

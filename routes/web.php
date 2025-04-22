@@ -38,4 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/recruitations', RecruitationController::class);
     Route::get('/settings', function () {
     })->name('settings.index');
+
+    // Aslab routes
+    Route::resource('aslabs', App\Http\Controllers\AslabController::class);
 });
