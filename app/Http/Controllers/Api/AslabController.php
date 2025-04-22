@@ -50,6 +50,7 @@ class AslabController extends Controller
      */
     public function show($id)
     {
+
         $aslab = Aslab::find($id);
 
         if (!$aslab) {
@@ -61,6 +62,7 @@ class AslabController extends Controller
             'message' => 'Success get Asistant Laboratory',
             'aslab' => $aslab,
         ]);
+
     }
 
     /**
@@ -72,7 +74,24 @@ class AslabController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $aslab = Aslab::find($id);
+        
+        if (!$aslab) {
+            return $this->sendResponse([
+                'status' => 404,
+                'message' => 'Asistant Laboratory not found',
+            ], 404);
+        }
+
+        $aslab->update($request->all());
+
+        return $this->sendResponse([
+            'status' => 200,
+            'message' => 'Success update Asistant Laboratory',
+            'aslab' => $aslab,
+        ]);
+
     }
 
     /**
@@ -83,6 +102,22 @@ class AslabController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        $aslab = Aslab::find($id);
+        
+        if (!$aslab) {
+            return $this->sendResponse([
+                'status' => 404,
+                'message' => 'Asistant Laboratory not found',
+            ], 404);
+        }
+
+        $aslab->delete();
+
+        return $this->sendResponse([
+            'status' => 200,
+            'message' => 'Success delete Asistant Laboratory',
+        ]);
+
     }
 }

@@ -10,8 +10,14 @@ class Blog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','body','thumbnail', 'author'];
-    protected $appends = ['thumbnail_content'];
+    protected $fillable = [
+        'title',
+        'description',
+        'thumbnail',
+        'author',
+    ];
+
+    // protected $appends = ['thumbnail_content'];
 
     protected static function booted()
     {

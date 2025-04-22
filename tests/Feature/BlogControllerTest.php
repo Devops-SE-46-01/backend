@@ -19,7 +19,7 @@ class BlogControllerTest extends TestCase
         $blogData = Blog::factory()->make()->toArray();
         $thumbnail = UploadedFile::fake()->image('blog-image.jpg');
 
-        $response = $this->postJson('/api/blogs', array_merge($blogData, [
+        $response = $this->postJson('/api/blog', array_merge($blogData, [
             'thumbnail' => $thumbnail,
         ]));
 
@@ -41,7 +41,7 @@ class BlogControllerTest extends TestCase
 
     public function test_store_blog_validation_fails_with_factory_missing_fields()
     {
-        $response = $this->postJson('/api/blogs', []); // kosong
+        $response = $this->postJson('/api/blog', []); // kosong
 
         $response->assertStatus(422);
     }
