@@ -16,15 +16,14 @@ class RecruitationController extends Controller
 
     public function update(Recruitation $recruitation)
     {
-        if($recruitation->is_accepted == 0) {
+        if ($recruitation->is_accepted == 0) {
             $recruitation->is_accepted = 1;
-	} else if ($recruitation->is_accepted == 1) {
-	    $recruitation->is_accepted = 2;
-	} else if ($recruitation->is_accepted == 2) {
+        } else if ($recruitation->is_accepted == 1) {
+            $recruitation->is_accepted = 2;
+        } else if ($recruitation->is_accepted == 2) {
             $recruitation->is_accepted = 3;
-	} else {
-           
-	}
+        } else {
+        }
 
         $recruitation->save();
         return redirect()->route('recruitations.index')->with('success', 'Action successfully completed.');

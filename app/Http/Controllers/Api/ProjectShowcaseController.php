@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Support\Facades\Validator;
+use App\Traits\ApiTrait;
 use App\Models\Recruitation;
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateProjectShowcaseRequest;
 use App\Models\ProjectShowcase;
 use App\Http\Controllers\Controller;
-use App\Traits\ApiTrait;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ProjectShowcaseResource;
+use App\Http\Requests\UpdateProjectShowcaseRequest;
 
 class ProjectShowcaseController extends Controller
 {
@@ -29,5 +30,4 @@ class ProjectShowcaseController extends Controller
 
         return new ProjectShowcaseResource($project_showcase);
     }
-
 }
