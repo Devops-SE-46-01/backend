@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\RecruitationController;
+use App\Http\Controllers\Api\BlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/recruitation/check/{nim}', [RecruitationController::class, 'check']);
 Route::post('/recruitation', [RecruitationController::class, 'store']);
 
+Route::post('/blogs', [BlogController::class, 'store']);
