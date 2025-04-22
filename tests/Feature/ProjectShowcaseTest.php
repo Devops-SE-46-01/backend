@@ -23,27 +23,27 @@ class ProjectShowcaseTest extends TestCase
     {
         // Create multiple project showcases
         $projects = ProjectShowcase::factory()->count(3)->create();
-        
+
         $response = $this->getJson('/api/project-showcases');
-        
+
         $response->assertOk()
             ->assertJson([
                 'status' => 'success',
                 'message' => 'Projects retrieved successfully'
             ]);
-        
+
         // Verify the response contains the projects
         $this->assertCount(3, $response->json('data'));
     }
-    
+
     // Test storing a new project showcase with valid data
     public function testStoreCreatesNewProjectShowcase()
     {
         Storage::fake('public');
-        
+
         $thumbnail = UploadedFile::fake()->image('project.jpg');
         $qrCode = UploadedFile::fake()->image('qr.jpg');
-        
+
         $payload = [
             'project_name' => 'Test Project',
             'team_name' => 'Test Team',
@@ -57,15 +57,15 @@ class ProjectShowcaseTest extends TestCase
             'thumbnail' => $thumbnail,
             'qr' => $qrCode
         ];
-        
+
         $response = $this->postJson('/api/project-showcases', $payload);
-        
+
         $response->assertStatus(201)
             ->assertJson([
                 'status' => 'success',
                 'message' => 'Project created successfully'
             ]);
-        
+
         // Verify it was stored in the database
         $this->assertDatabaseHas('project_showcase', [
             'project_name' => 'Test Project',
@@ -74,12 +74,12 @@ class ProjectShowcaseTest extends TestCase
             'about' => 'This is a test project description',
             'proposal' => 'https://example.com/proposal',
         ]);
-        
+
         // Verify files were stored
         Storage::disk('public')->assertExists('thumbnails/' . $thumbnail->hashName());
         Storage::disk('public')->assertExists('qr_codes/' . $qrCode->hashName());
     }
-    
+
     // Test storing a project showcase with invalid data
     public function testStoreReturnsValidationErrors()
     {
@@ -88,13 +88,13 @@ class ProjectShowcaseTest extends TestCase
             'project_name' => 'Test Project',
             'proposal' => 'not-a-url', // Invalid URL
         ];
-        
+
         $response = $this->postJson('/api/project-showcases', $payload);
-        
+
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['team_name', 'team_members', 'about', 'proposal']);
     }
-    
+
     // Test retrieving a specific project showcase
     public function testShowReturnsProjectShowcase()
     {
@@ -102,9 +102,9 @@ class ProjectShowcaseTest extends TestCase
             'project_name' => 'Specific Project',
             'team_name' => 'Specific Team',
         ]);
-        
+
         $response = $this->getJson("/api/project-showcases/{$project->id}");
-        
+
         $response->assertOk()
             ->assertJson([
                 'status' => 'success',
@@ -115,12 +115,12 @@ class ProjectShowcaseTest extends TestCase
                 ]
             ]);
     }
-    
+
     // Test retrieving a non-existent project showcase
     public function testShowReturnsNotFoundForInvalidId()
     {
         $response = $this->getJson('/api/project-showcases/99999');
-        
+
         $response->assertNotFound()
             ->assertJson([
                 'status' => 'error',
@@ -167,20 +167,20 @@ class ProjectShowcaseTest extends TestCase
     {
         Storage::fake('local');
         $project = ProjectShowcase::factory()->create();
-    
+
         $payload = [
             'proposal'  => 'invalid-url', // Invalid format
             'thumbnail' => UploadedFile::fake()->create('file.txt', 100, 'text/plain'), // Not image
         ];
-    
+
         $response = $this->postJson("/api/project-showcases/{$project->id}", $payload);
-    
+
         $response->assertStatus(422);
         $this->assertArrayHasKey('errors', $response->json());
         $this->assertArrayHasKey('proposal', $response->json('errors'));
         $this->assertArrayHasKey('thumbnail', $response->json('errors'));
     }
-    
+
     // Test update project showcase with missing id
     public function testUpdateReturnsNotFound()
     {
