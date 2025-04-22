@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/recruitation/check/{nim}', [RecruitationController::class, 'check']);
 Route::post('/recruitation', [RecruitationController::class, 'store']);
+Route::get('/yazidal/blogs', [BlogController::class, 'index'])->name('blogs.index');
+// Route::prefix('api')->group(function () {
+//     Route::get('/blogs', [BlogController::class, 'index']);
+// });
 
