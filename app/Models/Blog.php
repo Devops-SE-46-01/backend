@@ -17,7 +17,6 @@ class Blog extends Model
         'author',
     ];
 
-    // protected $appends = ['thumbnail_content'];
 
     protected static function booted()
     {
