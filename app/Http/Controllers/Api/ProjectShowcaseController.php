@@ -16,6 +16,15 @@ class ProjectShowcaseController extends Controller
 {
     use ApiTrait;
 
+    /**
+     * Validation rule for URL fields
+     */
+    private const URL_VALIDATION = 'nullable|string|url';
+
+    /**
+     * Validation rule for image fields
+     */
+    private const IMAGE_VALIDATION = 'nullable|image|mimes:jpeg,png,jpg|max:2048';
 
     public function index()
     {
@@ -34,14 +43,14 @@ class ProjectShowcaseController extends Controller
             'project_name' => 'required|string|max:255',
             'team_name' => 'required|string|max:255',
             'team_members' => 'required|string',
-            'proposal' => 'nullable|string|url',
-            'prd' => 'nullable|string|url',
-            'figma' => 'nullable|string|url',
-            'github' => 'nullable|string|url',
+            'proposal' => self::URL_VALIDATION,
+            'prd' => self::URL_VALIDATION,
+            'figma' => self::URL_VALIDATION,
+            'github' => self::URL_VALIDATION,
             'about' => 'required|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'qr' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'design_system' => 'nullable|string|url',
+            'thumbnail' => self::IMAGE_VALIDATION,
+            'qr' => self::IMAGE_VALIDATION,
+            'design_system' => self::URL_VALIDATION,
         ]);
 
         if ($validator->fails()) {

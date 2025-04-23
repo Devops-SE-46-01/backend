@@ -45,9 +45,9 @@ class ProjectShowcaseTest extends TestCase
         $qrCode = UploadedFile::fake()->image('qr.jpg');
 
         $payload = [
-            'project_name' => 'Test Project',
-            'team_name' => 'Test Team',
-            'team_members' => 'John Doe, Jane Doe',
+            'project_name' => 'Motionhack',
+            'team_name' => 'Barudak well',
+            'team_members' => 'Wildan, Syukri, Niam',
             'about' => 'This is a test project description',
             'proposal' => 'https://example.com/proposal',
             'prd' => 'https://example.com/prd',
@@ -68,9 +68,9 @@ class ProjectShowcaseTest extends TestCase
 
         // Verify it was stored in the database
         $this->assertDatabaseHas('project_showcase', [
-            'project_name' => 'Test Project',
-            'team_name' => 'Test Team',
-            'team_members' => 'John Doe, Jane Doe',
+            'project_name' => 'Motionlab',
+            'team_name' => 'Long Journey',
+            'team_members' => 'Indra, Wildan, Yajid',
             'about' => 'This is a test project description',
             'proposal' => 'https://example.com/proposal',
         ]);
@@ -85,7 +85,7 @@ class ProjectShowcaseTest extends TestCase
     {
         $payload = [
             // Missing required fields
-            'project_name' => 'Test Project',
+            'project_name' => 'Test yu',
             'proposal' => 'not-a-url', // Invalid URL
         ];
 
