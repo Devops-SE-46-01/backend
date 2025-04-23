@@ -15,6 +15,9 @@ class AslabController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     private const NOT_FOUND_MESSAGE = 'Asistant Laboratory not found'; 
+
     public function index()
     {
         $aslab = Aslab::all();
@@ -54,7 +57,7 @@ class AslabController extends Controller
         $aslab = Aslab::find($id);
 
         if (!$aslab) {
-            return $this->sendResponse('Asistant Laboratory not found', 404);
+            return $this->sendResponse(self::NOT_FOUND_MESSAGE, 404);
         }
 
         return $this->sendResponse([
@@ -80,7 +83,7 @@ class AslabController extends Controller
         if (!$aslab) {
             return $this->sendResponse([
                 'status' => 404,
-                'message' => 'Asistant Laboratory not found',
+                'message' => self::NOT_FOUND_MESSAGE,
             ], 404);
         }
 
@@ -108,7 +111,7 @@ class AslabController extends Controller
         if (!$aslab) {
             return $this->sendResponse([
                 'status' => 404,
-                'message' => 'Asistant Laboratory not found',
+                'message' => self::NOT_FOUND_MESSAGE,
             ], 404);
         }
 

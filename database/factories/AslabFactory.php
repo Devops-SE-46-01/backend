@@ -13,7 +13,7 @@ class AslabFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'image' => $this->faker->url(), 
+            'image' => $this->faker->url(),
             'position' => $this->faker->jobTitle(),
             'social_media' => '@' . $this->faker->userName(),
         ];
