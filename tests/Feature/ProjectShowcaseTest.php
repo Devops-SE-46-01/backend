@@ -12,6 +12,7 @@ class ProjectShowcaseTest extends TestCase
 {
     use RefreshDatabase;
     
+    
     /**
      * Test constants to avoid duplication
      */
