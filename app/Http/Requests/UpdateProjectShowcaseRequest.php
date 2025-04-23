@@ -8,6 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateProjectShowcaseRequest extends FormRequest
 {
+    private const VALIDATION_URL = 'sometimes|nullable|url';
     public function authorize()
     {
         return true;
@@ -19,14 +20,14 @@ class UpdateProjectShowcaseRequest extends FormRequest
             'project_name' => 'sometimes|nullable|string|max:255',
             'team_name' => 'sometimes|nullable|string|max:255',
             'team_members' => 'sometimes|nullable|string',
-            'proposal' => 'sometimes|nullable|url',
-            'prd' => 'sometimes|nullable|url',
-            'figma' => 'sometimes|nullable|url',
-            'github' => 'sometimes|nullable|url',
+            'proposal' => self::VALIDATION_URL,
+            'prd' => self::VALIDATION_URL,
+            'figma' => self::VALIDATION_URL,
+            'github' => self::VALIDATION_URL,
             'about' => 'sometimes|nullable|string',
             'thumbnail' => 'sometimes|nullable|image|max:2048',
             'qr' => 'sometimes|nullable|image|max:2048',
-            'design_system' => 'sometimes|nullable|url',
+            'design_system' => self::VALIDATION_URL,
         ];
     }
 
