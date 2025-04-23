@@ -11,6 +11,12 @@ use Tests\TestCase;
 class ProjectShowcaseTest extends TestCase
 {
     use RefreshDatabase;
+    
+    /**
+     * Test constants to avoid duplication
+     */
+    private const TEST_PROJECT_NAME = 'Test Project';
+    private const TEST_TEAM_NAME = 'Test Team';
 
     protected function setUp(): void
     {
@@ -45,9 +51,9 @@ class ProjectShowcaseTest extends TestCase
         $qrCode = UploadedFile::fake()->image('qr.jpg');
 
         $payload = [
-            'project_name' => 'Motionhack',
-            'team_name' => 'Barudak well',
-            'team_members' => 'Wildan, Syukri, Niam',
+            'project_name' => self::TEST_PROJECT_NAME,
+            'team_name' => self::TEST_TEAM_NAME,
+            'team_members' => 'John Doe, Jane Doe',
             'about' => 'This is a test project description',
             'proposal' => 'https://example.com/proposal',
             'prd' => 'https://example.com/prd',
@@ -68,9 +74,9 @@ class ProjectShowcaseTest extends TestCase
 
         // Verify it was stored in the database
         $this->assertDatabaseHas('project_showcase', [
-            'project_name' => 'Motionlab',
-            'team_name' => 'Long Journey',
-            'team_members' => 'Indra, Wildan, Yajid',
+            'project_name' => self::TEST_PROJECT_NAME,
+            'team_name' => self::TEST_TEAM_NAME,
+            'team_members' => 'John Doe, Jane Doe',
             'about' => 'This is a test project description',
             'proposal' => 'https://example.com/proposal',
         ]);
@@ -85,7 +91,7 @@ class ProjectShowcaseTest extends TestCase
     {
         $payload = [
             // Missing required fields
-            'project_name' => 'Test yu',
+            'project_name' => self::TEST_PROJECT_NAME,
             'proposal' => 'not-a-url', // Invalid URL
         ];
 
