@@ -30,11 +30,11 @@ class BlogTest extends TestCase
         ]));
 
         $response->assertStatus(201)
-                 ->assertJsonFragment([
-                     'message' => 'Blog created successfully',
-                     'title' => $blogData['title'],
-                     'author' => $blogData['author'],
-                 ]);
+            ->assertJsonFragment([
+                'message' => 'Blog created successfully',
+                'title' => $blogData['title'],
+                'author' => $blogData['author'],
+            ]);
 
         $this->assertDatabaseHas('blogs', [
             'title' => $blogData['title'],
@@ -87,10 +87,11 @@ class BlogTest extends TestCase
 
     public function testUpdateBlogWithThumbnail()
     {
-        Storage::fake('public');
         $this->setUpUser();
 
-        $file = UploadedFile::fake()->image('aaa.jpg')->size(500);
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('project.jpg');
 
         $response = $this->postJson("/api/blog/1", [
             'title' => 'Updated Title',
