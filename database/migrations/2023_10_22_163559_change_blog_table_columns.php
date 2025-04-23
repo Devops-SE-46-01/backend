@@ -11,24 +11,12 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        // Schema::table('blogs', function (Blueprint $table) {
-        //     $table->dropColumn('description');
-        //     $table->longText('body')->nullable()->after('title');
-        // });
-    }
+    public function up() {}
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        // Schema::table('blogs', function (Blueprint $table) {
-        //     $table->dropColumn('body');
-        //     $table->text('description')->after('title');
-        // });
-    }
+    public function down() {}
 };
