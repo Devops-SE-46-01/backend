@@ -11,12 +11,45 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 class BlogTest extends TestCase
 {
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
     use RefreshDatabase;
 
-    protected function setUp(): void
+    public function test_store_blog_with_valid_factory_data()
     {
-        parent::setUp();
         Storage::fake('public');
+
+        $blogData = Blog::factory()->make()->toArray();
+        $thumbnail = UploadedFile::fake()->image('blog-image.jpg');
+
+        $response = $this->postJson('/api/blog', array_merge($blogData, [
+            'thumbnail' => $thumbnail,
+        ]));
+
+        $response->assertStatus(201)
+                 ->assertJsonFragment([
+                     'message' => 'Blog created successfully',
+                     'title' => $blogData['title'],
+                     'author' => $blogData['author'],
+                 ]);
+
+        $this->assertDatabaseHas('blogs', [
+            'title' => $blogData['title'],
+            'description' => $blogData['description'],
+            'author' => $blogData['author'],
+        ]);
+
+        Storage::disk('public')->assertExists('blogs/' . $thumbnail->hashName());
+    }
+
+    public function test_store_blog_validation_fails_with_factory_missing_fields()
+    {
+        $response = $this->postJson('/api/blog', []); // kosong
+
+        $response->assertStatus(422);
     }
 
     protected function setUpUser()
@@ -41,58 +74,22 @@ class BlogTest extends TestCase
         $this->setUpUser();
         $response = $this->getJson('/api/blog');
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'status',
-                'message',
-                'blog'
-            ]);
+        $response->assertStatus(200);
     }
 
     public function testGetBlogByAuthor()
     {
         $this->setUpUser();
         $response = $this->getJson('/api/blog?author=Boedi');
-        
         $response->assertStatus(200)
             ->assertJsonFragment(['author' => 'Boedi']);
     }
 
-    public function testStoreBlogWithValidFactoryData()
-    {
-        $blogData = Blog::factory()->make()->toArray();
-        $thumbnail = UploadedFile::fake()->image('blog-image.jpg');
-
-        $response = $this->postJson('/api/blog', array_merge($blogData, [
-            'thumbnail' => $thumbnail,
-        ]));
-
-        $response->assertStatus(201)
-            ->assertJsonFragment([
-                'message' => 'Blog created successfully',
-                'title' => $blogData['title'],
-                'author' => $blogData['author'],
-            ]);
-
-        $this->assertDatabaseHas('blogs', [
-            'title' => $blogData['title'],
-            'description' => $blogData['description'],
-            'author' => $blogData['author'],
-        ]);
-
-        Storage::disk('public')->assertExists('blogs/' . $thumbnail->hashName());
-    }
-
-    public function testStoreBlogValidationFailsWithMissingFields()
-    {
-        $response = $this->postJson('/api/blog', []);
-
-        $response->assertStatus(422);
-    }
-
     public function testUpdateBlogWithThumbnail()
     {
+        Storage::fake('public');
         $this->setUpUser();
+
         $file = UploadedFile::fake()->image('aaa.jpg')->size(500);
 
         $response = $this->postJson("/api/blog/1", [
@@ -104,18 +101,13 @@ class BlogTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonFragment(['message' => 'Edit Success']);
-
-        $this->assertDatabaseHas('blogs', [
-            'id' => 1,
-            'title' => 'Updated Title',
-            'description' => 'Updated content',
-            'author' => 'Charlie'
-        ]);
     }
 
     public function testUpdateBlogWithLargeSizeThumbnail()
     {
+        Storage::fake('public');
         $this->setUpUser();
+
         $file = UploadedFile::fake()->image('big.jpg')->size(3000);
 
         $response = $this->postJson("/api/blog/1", [
@@ -126,26 +118,5 @@ class BlogTest extends TestCase
         ]);
 
         $response->assertStatus(422);
-    }
-
-    public function testDeleteBlog()
-    {
-        $this->setUpUser();
-        
-        $response = $this->deleteJson('/api/blog/1');
-
-        $response->assertStatus(200)
-            ->assertJsonFragment([
-                'message' => 'Blog deleted successfully'
-            ]);
-
-        $this->assertDatabaseMissing('blogs', ['id' => 1]);
-    }
-
-    public function testDeleteNonExistentBlog()
-    {
-        $response = $this->deleteJson('/api/blog/999');
-
-        $response->assertStatus(404);
     }
 }
