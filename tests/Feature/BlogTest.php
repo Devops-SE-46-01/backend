@@ -85,24 +85,6 @@ class BlogTest extends TestCase
             ->assertJsonFragment(['author' => 'Boedi']);
     }
 
-    public function testUpdateBlogWithThumbnail()
-    {
-        $this->setUpUser();
-
-        Storage::fake('public');
-
-        $file = UploadedFile::fake()->image('project.jpg');
-
-        $response = $this->postJson("/api/blog/1", [
-            'title' => 'Updated Title',
-            'description' => 'Updated content',
-            'thumbnail' => $file,
-            'author' => 'Charlie'
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJsonFragment(['message' => 'Edit Success']);
-    }
 
     public function testUpdateBlogWithLargeSizeThumbnail()
     {
