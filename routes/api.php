@@ -44,5 +44,7 @@ Route::get('/blog', [BlogController::class, 'index']);
 Route::get('/Aslab/{id}', [AslabController::class, 'show']);
 Route::get('/Aslab', [AslabController::class, 'index']);
 Route::post('/Aslab', [AslabController::class, 'store']);
+Route::put('/Aslab/{id}', [AslabController::class, 'update']);
+Route::delete('/Aslab/{id}', [AslabController::class, 'destroy']);
 Route::post('/blog/{id}', [BlogController::class, 'update']);
 

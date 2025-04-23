@@ -10,6 +10,8 @@ use Tests\TestCase;
 
 class ProjectShowcaseTest extends TestCase
 {
+    private const FIELD_PROJECT_NAME = 'New Name';
+    private const FIELD_TEAM_NAME = 'New Team';
     use RefreshDatabase;
 
     protected function setUp(): void
@@ -140,8 +142,8 @@ class ProjectShowcaseTest extends TestCase
 
         $newThumbnail = UploadedFile::fake()->image('new-thumb.jpg');
         $payload = [
-            'project_name' => 'New Name',
-            'team_name' => 'New Team',
+            'project_name' => self::FIELD_PROJECT_NAME,
+            'team_name' => self::FIELD_TEAM_NAME,
             'thumbnail' => $newThumbnail,
         ];
 
@@ -149,14 +151,14 @@ class ProjectShowcaseTest extends TestCase
 
         $response->assertOk()
             ->assertJsonFragment([
-                'project_name' => 'New Name',
-                'team_name' => 'New Team',
+                'project_name' => self::FIELD_PROJECT_NAME,
+                'team_name' => self::FIELD_TEAM_NAME,
             ]);
 
         $this->assertDatabaseHas('project_showcase', [
             'id' => $project->id,
-            'project_name' => 'New Name',
-            'team_name' => 'New Team',
+            'project_name' => self::FIELD_PROJECT_NAME,
+            'team_name' => self::FIELD_TEAM_NAME,
         ]);
 
         Storage::disk('local')->assertExists('thumbnails/' . $newThumbnail->hashName());
@@ -169,8 +171,8 @@ class ProjectShowcaseTest extends TestCase
         $project = ProjectShowcase::factory()->create();
 
         $payload = [
-            'proposal'  => 'invalid-url', // Invalid format
-            'thumbnail' => UploadedFile::fake()->create('file.txt', 100, 'text/plain'), // Not image
+            'proposal'  => 'invalid-url',
+            'thumbnail' => UploadedFile::fake()->create('file.txt', 100, 'text/plain'),
         ];
 
         $response = $this->postJson("/api/project-showcases/{$project->id}", $payload);
@@ -206,7 +208,7 @@ class ProjectShowcaseTest extends TestCase
     }
 
     // Test delete project showcase with missing id
-    public function testDeleteReturns()
+    public function testDeleteReturnsNotFound   ()
     {
         $response = $this->deleteJson('/api/project-showcases/99999', [
             'project_name' => 'Non Existent'
