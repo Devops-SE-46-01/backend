@@ -53,6 +53,19 @@ class AslabTest extends TestCase
         $this->assertDatabaseHas('aslabs', $data);
     }
 
+    public function test_validation_fails_when_fields_missing()
+    {
+        $response = $this->postJson('/api/Aslab', [
+            'name' => '',
+            'image' => '',
+            'position' => '',
+            'social_media' => '',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name', 'image', 'position', 'social_media']);
+    }
+
     public function testCanShowAslab()
     {
         $aslab = Aslab::factory()->create();
@@ -127,4 +140,4 @@ class AslabTest extends TestCase
 
         $response->assertStatus(404);
     }
-} 
+}
