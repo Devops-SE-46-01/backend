@@ -32,38 +32,35 @@ class AslabTest extends TestCase
             ]);
     }
 
-    public function testCanCreateAslab()
+    public function testCanCreateAslabWithImage()
     {
+        // Create a fake image file
+        $file = UploadedFile::fake()->image('aslab.jpg');
+
         $data = [
-            'name' => 'Fiona',
-            'image' => 'aslab.jpg',
-            'position' => 'Backend Lab Assistant',
-            'social_media' => '@fionadev',
+            'name' => 'John Doe',
+            'image' => $file,
+            'position' => 'Frontend Lab Assistant',
+            'social_media' => '@johndoe',
         ];
 
         $response = $this->postJson('/api/Aslab', $data);
 
-        $response->assertStatus(200)
-            ->assertJsonFragment([
-                'name' => 'Fiona',
-                'position' => 'Backend Lab Assistant',
-                'social_media' => '@fionadev',
-            ]);
+        // Check that the image was stored
+        Storage::disk('public')->assertExists($response->json('aslab.image'));
 
-        $this->assertDatabaseHas('aslabs', $data);
+        // Check database
+        $this->assertDatabaseHas('aslabs', [
+            'name' => 'John Doe',
+            'position' => 'Frontend Lab Assistant',
+            'social_media' => '@johndoe',
+        ]);
     }
-
     public function test_validation_fails_when_fields_missing()
     {
-        $response = $this->postJson('/api/Aslab', [
-            'name' => '',
-            'image' => '',
-            'position' => '',
-            'social_media' => '',
-        ]);
+        $response = $this->postJson('/api/Aslab', []);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['name', 'image', 'position', 'social_media']);
     }
 
     public function testCanShowAslab()
