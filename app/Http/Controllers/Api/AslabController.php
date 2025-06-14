@@ -15,6 +15,9 @@ class AslabController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private const NOT_FOUND_MESSAGE = 'Asistant Laboratory not found';
+
     public function index()
     {
         $aslab = Aslab::all();
@@ -33,7 +36,19 @@ class AslabController extends Controller
      */
     public function store(Request $request)
     {
-        $aslab = Aslab::create($request->all());
+        $validateData = $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'position' => 'required|string|max:255',
+            'social_media' => 'required|string|max:255',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('aslab', 'public');
+            $validateData['image'] = $imagePath;
+        }
+
+        $aslab = Aslab::create($validateData);
 
         return $this->sendResponse([
             'status' => 201,
@@ -54,7 +69,7 @@ class AslabController extends Controller
         $aslab = Aslab::find($id);
 
         if (!$aslab) {
-            return $this->sendResponse('Asistant Laboratory not found', 404);
+            return $this->sendResponse(self::NOT_FOUND_MESSAGE, 404);
         }
 
         return $this->sendResponse([
@@ -76,11 +91,11 @@ class AslabController extends Controller
     {
 
         $aslab = Aslab::find($id);
-        
+
         if (!$aslab) {
             return $this->sendResponse([
                 'status' => 404,
-                'message' => 'Asistant Laboratory not found',
+                'message' => self::NOT_FOUND_MESSAGE,
             ], 404);
         }
 
@@ -104,11 +119,11 @@ class AslabController extends Controller
     {
 
         $aslab = Aslab::find($id);
-        
+
         if (!$aslab) {
             return $this->sendResponse([
                 'status' => 404,
-                'message' => 'Asistant Laboratory not found',
+                'message' => self::NOT_FOUND_MESSAGE,
             ], 404);
         }
 

@@ -14,6 +14,7 @@ class ProjectShowcaseTest extends TestCase
     private const FIELD_TEAM_NAME = 'New Team';
     use RefreshDatabase;
     
+    
     /**
      * Test constants to avoid duplication
      */
